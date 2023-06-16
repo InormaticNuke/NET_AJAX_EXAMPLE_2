@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ProyectoAjaxMVC.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -22,5 +25,21 @@ namespace WebService
         {
             return "Hola a todos";
         }
+
+        [WebMethod]
+
+        public string ObtenerPeliculasJson()
+        {
+            PeliculaController peliculacontroller = new PeliculaController();
+            var peliculasJson = peliculacontroller.ObtenerPeliculasJson();
+
+            var peliculas = JArray.Parse(peliculasJson);
+            var peliculasOrdenadas = peliculas.OrderBy(p => (String)p["NombrePelicula"]).ToList();
+
+            var peliculasOrdenadasJson = JsonConvert.SerializeObject(peliculasOrdenadas);
+
+            return peliculasOrdenadasJson;
+        }
+
     }
 }
