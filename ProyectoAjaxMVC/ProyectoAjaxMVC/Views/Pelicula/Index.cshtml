@@ -1,0 +1,57 @@
+﻿<h2>Lista de Peliculas</h2>
+
+<!--- Definimos un Id en la etique div donde queremos mostrar nuestros elementos -->
+<div id="peliculasContainer">
+</div>
+
+<!-- se incluye esta biblioteca para realizar las funciones en ajax--->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    //Declaro una funcion llamada obtenerPeliculas();
+    $(document).ready(function () {
+        obtenerPeliculas();
+    });
+
+    //La funcion obtenerPeliculas() tendra la siguiente ruta
+    function obtenerPeliculas() {
+        $.ajax({
+            //la peticion ajax sera de tipo GET
+            type: "GET",
+            //la url es el nombre del metodo que esta en nuestro controlador y luego el nombre de nuestro controlador
+            url: "@Url.Action("ObtenerPeliculasJson","Pelicula")",
+            //el tipo de dato que sera en formato json
+            dataType: "json",
+            //si es correcto se ejecutara la funcion mostrarPeliculas y si existe un error aparecer una alerta con ese mensaje
+            success: function (peliculas) {
+                mostrarPeliculas(peliculas);
+            },
+            error: function () {
+                alert("Error al obtener las peliculas");
+            }
+        });
+    }
+
+    //En caso de ser correta la peticion AJAX, se mostrara la funcion mostrarPeliculas()
+    function mostrarPeliculas(peliculas) {
+        //se declara una variable en vacio 
+        var output = "";
+
+        //Se recorre el arreglo de las peliculas y se muestran todos los elementos que contienen con las etiquetas html. esto se almacenara en la variable output
+        for (var i = 0; i < peliculas.length; i++) {
+            output += "<div>";
+            output += "<strong> Id: </strong>" + peliculas[i].IdPelicula + "<br />";
+            output += "<strong> Nombre: </strong>" + peliculas[i].NombrePelicula + "<br />";
+            output += "<strong> Categoria: </strong>" + peliculas[i].CategoriaPelicula + "<br />";
+            //Para mostrar los valores de los arreglos que estan siendo creados en la clase Entradas.cs, los llamamos por su prefijo que esta en el arreglo
+            output += "<strong> Cantidad de Entradas: </strong>" + peliculas[i].claseEntradas.CantidadEntradas + "<br />";
+            output += "<strong> Valor de Entradas: </strong>" + peliculas[i].claseEntradas.ValorEntradas + "<br />";
+            output += "</div>";
+            output += "<br />";
+        }
+
+        // todo el contenido se mostrara en la etiqueta <div> con el id ="peliculasContainer"
+        $("#peliculasContainer").html(output);
+    }
+
+</script>
